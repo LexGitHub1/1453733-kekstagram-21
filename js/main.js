@@ -24,83 +24,69 @@ const AUTHOR_NAMES = [
   `Петр`
 ];
 
-const getRandomGenerator = function (length) {
+const listOfPhotos = document.querySelector(`.pictures`);
+const picturesTemplate = document.querySelector(`#picture`).content;
+
+const getRandomElement = function (length) {
   return Math.floor(Math.random() * Math.floor(length));
 };
 
-const MockupPhotoObject = function (url, description, likes, comments) {
-  this.url = url;
-  this.description = description;
-  this.likes = likes;
-  this.comments = comments;
-};
+const getPhoto = function (urlNumber) {
+  const likesCount = LIKES_MIN + getRandomElement(LIKES_MAX);
 
-const generateCommentContent = () => {
-  const commentNum = getRandomGenerator(COMMENTS_LIST.length);
-  let commentContent = COMMENTS_LIST[commentNum];
+  const authorNumber = getRandomElement(AUTHOR_NAMES.length);
+  const author = AUTHOR_NAMES[authorNumber];
 
-  if (Math.random() < 0.5) {
-    const secondCommentNum = getRandomGenerator(COMMENTS_LIST.length);
-    commentContent += ` ` + COMMENTS_LIST[secondCommentNum];
-  }
-  return commentContent;
-};
+  const commentsCount = getRandomElement(COMMENTS_MAX);
+  let comments = [];
+  let lastCommentNUmber = 0;
 
-const MockupComment = function () {
-  const avatarNum = getRandomGenerator(COMMENTS_MIN, 1, true);
-  const nameNum = getRandomGenerator(AUTHOR_NAMES.length);
-  const message = generateCommentContent();
+  for (let i = 0; i <= commentsCount; i++) {
+    let commentNumber = COMMENTS_MIN + getRandomElement(COMMENTS_LIST.length);
 
-  this.avatar = `img/avatar-${avatarNum}.svg`;
-  this.message = message;
-  this.name = AUTHOR_NAMES[nameNum];
-};
-
-const createPhotoArray = (arrayLength) => {
-  const photoArray = [];
-  for (let i = 1; i <= arrayLength; i++) {
-    const likesAmount = getRandomGenerator(LIKES_MAX, LIKES_MIN, true);
-    const commentsAmount = getRandomGenerator(COMMENTS_MAX);
-    const comments = [];
-    for (let j = 0; j < commentsAmount; j++) {
-      comments.push(new MockupComment());
+    if (commentNumber === lastCommentNUmber) {
+      i--;
+    } else {
+      comments.push(COMMENTS_LIST[commentNumber]);
+      lastCommentNUmber = commentNumber;
     }
-    const newPhotoObject = new MockupPhotoObject(
-        `photos/${i}.jpg`,
-        `Тестовое фото №${i}`,
-        likesAmount,
-        comments
-    );
-    photoArray.push(newPhotoObject);
   }
-  return photoArray;
+
+  let singlePhoto = {
+    url: `photos/` + urlNumber + `.jpg`,
+    description: author,
+    likes: likesCount,
+    comments};
+
+  return singlePhoto;
 };
 
-const createDomPictureElement = (template, pictureObject) => {
-  const newPictureElement = template.cloneNode(true);
-  const imgElement = newPictureElement.querySelector(`.picture__img`);
-  const likesAmountElement = newPictureElement.querySelector(`.picture__likes`);
-  const commentsAmountElement = newPictureElement.querySelector(`.picture__comments`);
-
-  imgElement.src = pictureObject.url;
-  likesAmountElement.textContent = pictureObject.likes;
-  commentsAmountElement.textContent = pictureObject.comments.length;
-  return newPictureElement;
-};
-
-const generateDomPicturesFragment = (picturesArray) => {
-  const newFragment = document.createDocumentFragment();
-  const pictureTemplate = document.querySelector(`#picture`).content.querySelector(`.picture`);
-  for (let i = 0; i < picturesArray.length; i++) {
-    const newChildElement = createDomPictureElement(pictureTemplate, picturesArray[i]);
-    newFragment.appendChild(newChildElement);
+const getAllPhotos = function (photosCount) {
+  let photos = [];
+  for (let i = 1; i <= photosCount; i++) {
+    photos.push(getPhoto(i));
   }
-  return newFragment;
+  return photos;
 };
 
-const picturesParentElement = document.querySelector(`.pictures`);
+const displayPicture = function (currentPhoto) {
+  const pictureTemplate = picturesTemplate.querySelector(`.picture`);
+  let picture = pictureTemplate.cloneNode(true);
 
-const mockupPhotosArray = createPhotoArray(PHOTOS_COUNT);
+  const img = picture.querySelector(`.picture__img`);
+  img.src = currentPhoto.url;
 
-const mockupPhotosFragment = generateDomPicturesFragment(mockupPhotosArray);
-picturesParentElement.appendChild(mockupPhotosFragment);
+  const comments = picture.querySelector(`.picture__comments`);
+  comments.textContent = currentPhoto.comments;
+
+  const likes = picture.querySelector(`.picture__likes`);
+  likes.textContent = currentPhoto.likes;
+
+  return picture;
+};
+
+const allPhotos = getAllPhotos(PHOTOS_COUNT);
+
+for (let photo of allPhotos) {
+  listOfPhotos.appendChild(displayPicture(photo));
+}

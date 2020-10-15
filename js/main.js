@@ -24,69 +24,61 @@ const AUTHOR_NAMES = [
   `Петр`
 ];
 
-const listOfPhotos = document.querySelector(`.pictures`);
-const picturesTemplate = document.querySelector(`#picture`).content;
+const pictures = document.querySelector(`.pictures`);
+const pictureTemplate = document.querySelector(`#picture`).content.querySelector(`.picture`);
 
-const getRandomElement = function (length) {
-  return Math.floor(Math.random() * Math.floor(length));
+const getRandomElement = function (min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
 };
 
-const getPhoto = function (urlNumber) {
-  const likesCount = LIKES_MIN + getRandomElement(LIKES_MAX);
-
-  const authorNumber = getRandomElement(AUTHOR_NAMES.length);
-  const author = AUTHOR_NAMES[authorNumber];
-
-  const commentsCount = getRandomElement(COMMENTS_MAX);
-  let comments = [];
-  let lastCommentNUmber = 0;
-
-  for (let i = 0; i <= commentsCount; i++) {
-    let commentNumber = COMMENTS_MIN + getRandomElement(COMMENTS_LIST.length);
-
-    if (commentNumber === lastCommentNUmber) {
-      i--;
-    } else {
-      comments.push(COMMENTS_LIST[commentNumber]);
-      lastCommentNUmber = commentNumber;
-    }
+const getCommentsArray = function (numberOfComments) {
+  const array = [];
+  for (let i = 0; i < numberOfComments; i++) {
+    const commentObj = {
+      avatar: `img/avatar-` + getRandomElement(COMMENTS_MIN, COMMENTS_MAX) + `.svg`,
+      message: COMMENTS_LIST[getRandomElement(0, COMMENTS_LIST.length - 1)],
+      name: AUTHOR_NAMES[getRandomElement(0, AUTHOR_NAMES.length - 1)]
+    };
+    array.push(commentObj);
   }
-
-  let singlePhoto = {
-    url: `photos/` + urlNumber + `.jpg`,
-    description: author,
-    likes: likesCount,
-    comments};
-
-  return singlePhoto;
+  return array;
 };
 
-const getAllPhotos = function (photosCount) {
-  let photos = [];
-  for (let i = 1; i <= photosCount; i++) {
-    photos.push(getPhoto(i));
+const createPhotoArray = function () {
+  const randomData = [];
+
+  for (let i = 1; i <= PHOTOS_COUNT; i++) {
+    const object = {
+      url: `photos/` + i + `.jpg`,
+      description: `Описание фотографии`,
+      likes: getRandomElement(LIKES_MIN, LIKES_MAX),
+      comments: getCommentsArray(getRandomElement(COMMENTS_MIN, COMMENTS_MAX))
+    };
+    randomData.push(object);
   }
-  return photos;
+  return randomData;
 };
 
-const displayPicture = function (currentPhoto) {
-  const pictureTemplate = picturesTemplate.querySelector(`.picture`);
-  let picture = pictureTemplate.cloneNode(true);
+const renderPhoto = function (photo) {
+  const pictureElement = pictureTemplate.cloneNode(true);
 
-  const img = picture.querySelector(`.picture__img`);
-  img.src = currentPhoto.url;
+  pictureElement.querySelector(`.picture__img`).src = photo.url;
+  pictureElement.querySelector(`.picture__img`).alt = photo.description;
+  pictureElement.querySelector(`.picture__likes`).textContent = photo.likes;
+  pictureElement.querySelector(`.picture__comments`).textContent = photo.comments.length;
 
-  const comments = picture.querySelector(`.picture__comments`);
-  comments.textContent = currentPhoto.comments;
-
-  const likes = picture.querySelector(`.picture__likes`);
-  likes.textContent = currentPhoto.likes;
-
-  return picture;
+  return pictureElement;
 };
 
-const allPhotos = getAllPhotos(PHOTOS_COUNT);
+const fillElements = function () {
+  const fragment = document.createDocumentFragment();
+  const photosArray = createPhotoArray();
+  for (let i = 0; i < PHOTOS_COUNT; i++) {
+    fragment.appendChild(renderPhoto(photosArray[i]));
+  }
+  pictures.appendChild(fragment);
+};
 
-for (let photo of allPhotos) {
-  listOfPhotos.appendChild(displayPicture(photo));
-}
+fillElements();

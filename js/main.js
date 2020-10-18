@@ -1,11 +1,5 @@
 'use strict';
 
-const COMMENTS_MIN = 1;
-const COMMENTS_MAX = 4;
-const LIKES_MIN = 15;
-const LIKES_MAX = 200;
-const PHOTOS_COUNT = 25;
-
 const COMMENTS_LIST = [
   `Всё отлично!`,
   `В целом всё неплохо. Но не всё.`,
@@ -25,40 +19,41 @@ const AUTHOR_NAMES = [
 ];
 
 const pictures = document.querySelector(`.pictures`);
-const pictureTemplate = document.querySelector(`#picture`).content.querySelector(`.picture`);
 
-const getRandomInterval = function (min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+const getRandom = function (min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
 };
 
-const getRandomElement = function (array) {
-  const random = Math.floor(Math.random() * array.length);
-  return array[random];
-};
+const commentsArray = function () {
+  const comments = [];
 
-const getRandomArray = function (name, comment) {
-  const randomArray = [];
-  for (let i = 1; i < PHOTOS_COUNT; i++) {
-    randomArray.push({
-      url: `photos/${i}.jpg`,
-      likes: getRandomInterval(LIKES_MIN, LIKES_MAX),
-      description: `Лучшее фото на Земле`,
-      comments: [
-        {
-          avatar: `img/avatar-${getRandomInterval(COMMENTS_MIN, COMMENTS_MAX)}.svg`,
-          message: getRandomElement(comment),
-          name: getRandomElement(name),
-        },
-      ],
-    });
+  for (let i = 0; i < getRandom(0, 4); i++) {
+    const comment = {
+      avatar: `img/avatar-${getRandom(1, 6)}.svg`,
+      message: COMMENTS_LIST[getRandom(0, 2)],
+      name: AUTHOR_NAMES[getRandom(0, 6)]
+    };
+    comments.push(comment);
   }
+  return comments;
+};
 
-  return randomArray;
+const photosArray = function () {
+  const photos = [];
+  for (let i = 1; i <= 25; i++) {
+    const photo = {
+      url: `photos/${i}.jpg`,
+      description: `Описание фото`,
+      likes: getRandom(15, 200),
+      comments: commentsArray()
+    };
+    photos.push(photo);
+  }
+  return photos;
 };
 
 const getPhoto = function (photo) {
+  const pictureTemplate = document.querySelector(`#picture`).content.querySelector(`.picture`);
   const pictureElement = pictureTemplate.cloneNode(true);
 
   pictureElement.querySelector(`.picture__img`).src = photo.url;
@@ -69,15 +64,10 @@ const getPhoto = function (photo) {
   return pictureElement;
 };
 
-const fillElements = function () {
-  const fragment = document.createDocumentFragment();
-  const arrayOfObjects = getRandomArray(AUTHOR_NAMES, COMMENTS_LIST);
+const fragmentPhoto = document.createDocumentFragment();
+const photoArray = photosArray();
 
-  arrayOfObjects.forEach(function (item) {
-    fragment.appendChild(getPhoto(item));
-  });
-
-  pictures.appendChild(fragment);
-};
-
-fillElements();
+for (let i = 0; i < 25; i++) {
+  fragmentPhoto.appendChild(getPhoto(photoArray[i]));
+}
+pictures.appendChild(fragmentPhoto);

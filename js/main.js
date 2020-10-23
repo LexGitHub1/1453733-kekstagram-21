@@ -21,7 +21,11 @@ const AUTHOR_NAMES = [
 const OBJECTS_AMOUNT = 25;
 
 const getRandom = function (min, max) {
-  return Math.floor(Math.random() * (max - min)) + min;
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+const getRandomArrayElement = function (array) {
+  return array[getRandom(0, array.length - 1)];
 };
 
 const getCommentsArray = function (count) {
@@ -30,7 +34,7 @@ const getCommentsArray = function (count) {
   for (let i = 0; i < count; i++) {
     const comment = {
       avatar: `img/avatar-${getRandom(1, 6)}.svg`,
-      message: `${getRandom(COMMENTS_LIST)}`,
+      message: getRandomArrayElement(COMMENTS_LIST),
       name: AUTHOR_NAMES[getRandom(0, 6)]
     };
     comments.push(comment);
@@ -38,9 +42,9 @@ const getCommentsArray = function (count) {
   return comments;
 };
 
-const getPhotosArray = function () {
+const getPhotosArray = function (objectsAmount) {
   const photos = [];
-  for (let i = 1; i <= 25; i++) {
+  for (let i = 1; i <= objectsAmount; i++) {
     const photo = {
       url: `photos/${i}.jpg`,
       description: `Описание фото`,
@@ -64,16 +68,16 @@ const getPhoto = function (photo) {
   return pictureElement;
 };
 
-const photoArray = getPhotosArray(OBJECTS_AMOUNT);
-
-const renderPictures = function () {
-  const pictures = document.querySelector(`.pictures`);
+const renderPictures = function (pictures) {
+  const picturesElement = document.querySelector(`.pictures`);
   const fragmentPhoto = document.createDocumentFragment();
 
-  photoArray.forEach(function (value) {
+  pictures.forEach(function (value) {
     fragmentPhoto.appendChild(getPhoto(value));
   });
-  pictures.appendChild(fragmentPhoto);
+  picturesElement.appendChild(fragmentPhoto);
 };
 
-renderPictures(photoArray);
+const photosArray = getPhotosArray(OBJECTS_AMOUNT);
+
+renderPictures(photosArray);

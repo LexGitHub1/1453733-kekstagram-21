@@ -20,6 +20,11 @@ const AUTHOR_NAMES = [
 
 const OBJECTS_AMOUNT = 25;
 
+const AVATAR = {
+  width: 35,
+  height: 25,
+};
+
 const getRandom = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
@@ -81,3 +86,43 @@ const renderPictures = function (pictures) {
 const photosArray = getPhotosArray(OBJECTS_AMOUNT);
 
 renderPictures(photosArray);
+
+// Задание 3.18 (Личный проект: больше деталей (часть 2))
+
+const createSocialComment = function (object) {
+  const fragment = document.createDocumentFragment();
+  const socialComments = document.querySelector(`.social__comments`);
+  const socialComment = socialComments.querySelector(`li`);
+  socialComments.innerHTML = ``;
+
+  object.comments.forEach(function (value) {
+    const li = socialComment.cloneNode(true);
+    li.querySelector(`.social__picture`).src = value.avatar;
+    li.querySelector(`.social__picture`).alt = value.name;
+    li.querySelector(`.social__picture`).width = AVATAR.width;
+    li.querySelector(`.social__picture`).height = AVATAR.height;
+    li.querySelector(`.social__text`).textContent = value.message;
+    fragment.append(li);
+    socialComments.append(fragment);
+  });
+};
+
+const bigPicture = document.querySelector(`.big-picture`);
+const bigPictureOpened = function (object) {
+  bigPicture.classList.remove(`hidden`);
+  const {url, likes, comments, description} = object;
+  document.querySelector(`.big-picture__img img`).src = url;
+  document.querySelector(`.likes-count`).textContent = likes;
+  document.querySelector(`.comments-count`).textContent = comments.length;
+  document.querySelector(`.social__caption`).textContent = description;
+  createSocialComment(photosArray[0]);
+};
+bigPictureOpened(photosArray[0]);
+
+const socialCommentCount = document.querySelector(`.social__comment-count`);
+socialCommentCount.classList.add(`hidden`);
+
+const commentsLoader = document.querySelector(`.comments-loader`);
+commentsLoader.classList.add(`hidden`);
+
+document.querySelector(`body`).classList.add(`modal-open`);

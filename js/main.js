@@ -120,8 +120,8 @@ const createSocialComment = function (object) {
   socialComments.append(fragment);
 };
 
+const bigPicture = document.querySelector(`.big-picture`);
 const showFullSizePicture = function (object) {
-  const bigPicture = document.querySelector(`.big-picture`);
   bigPicture.classList.remove(`hidden`);
 
   const {url, likes, comments, description} = object;
@@ -351,5 +351,67 @@ hashTagsInput.addEventListener(`focusin`, function () {
 });
 
 hashTagsInput.addEventListener(`focusout`, function () {
+  document.addEventListener(`keydown`, modalEscPress);
+});
+
+// Задание 4.13 (Личный проект: доверяй, но проверяй (часть 2))
+
+const smallPhotos = document.querySelectorAll(`.picture`);
+
+const addSmallPhotoClicker = function (smallphoto, content) {
+  smallphoto.addEventListener(`click`, function (evt) {
+    evt.preventDefault();
+    document.addEventListener(`keydown`, bigPictureEscPress);
+    showFullSizePicture(content);
+    createSocialComment(content);
+  });
+};
+
+for (let i = 0; i < smallPhotos.length; i++) {
+  addSmallPhotoClicker(smallPhotos[i], mocks[i]);
+}
+
+// Закрываем превью фото с коментами
+
+const bigPictureCancel = document.querySelector(`.big-picture__cancel`);
+
+const bigPictureEscPress = function (evt) {
+  if (evt.key === `Escape`) {
+    evt.preventDefault();
+    closeBigPicture();
+  }
+};
+
+document.addEventListener(`keydown`, bigPictureEscPress);
+
+const closeBigPicture = function () {
+  bigPicture.classList.add(`hidden`);
+  document.removeEventListener(`keydown`, bigPictureEscPress);
+};
+
+bigPictureCancel.addEventListener(`click`, function () {
+  closeBigPicture();
+});
+
+// Поле ввода комментария
+
+const commentsField = document.querySelector(`.text__description`);
+const COMMENTS_MAX = 120;
+
+commentsField.oninput = function () {
+  const valueLength = commentsField.value.length;
+  if (commentsField.value.length > COMMENTS_MAX) {
+    commentsField.setCustomValidity(`Удалите ` + (COMMENTS_MAX - valueLength) + ` симв.`);
+  } else {
+    commentsField.setCustomValidity(``);
+  }
+  commentsField.reportValidity();
+};
+
+commentsField.addEventListener(`focusin`, function () {
+  document.removeEventListener(`keydown`, modalEscPress);
+});
+
+commentsField.addEventListener(`focusout`, function () {
   document.addEventListener(`keydown`, modalEscPress);
 });

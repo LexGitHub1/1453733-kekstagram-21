@@ -35,11 +35,6 @@ const AVATAR = {
   height: 25,
 };
 
-const HASHTAGS_LENGTH = {
-  min: 2,
-  max: 20
-};
-
 const getRandom = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
@@ -211,24 +206,8 @@ const onPlusScaleClick = function () {
 scaleControlBigger.addEventListener(`click`, onPlusScaleClick);
 
 const imageStyleChange = function (number) {
-  switch (number) {
-    case 25:
-      imageUploadPreview.style.transform = `scale(0.25)`;
-      scaleValue.value = `${number}%`;
-      break;
-    case 50:
-      imageUploadPreview.style.transform = `scale(0.50)`;
-      scaleValue.value = `${number}%`;
-      break;
-    case 75:
-      imageUploadPreview.style.transform = `scale(0.75)`;
-      scaleValue.value = `${number}%`;
-      break;
-    case 100:
-      imageUploadPreview.style.transform = `scale(1.00)`;
-      scaleValue.value = `${number}%`;
-      break;
-  }
+  imageUploadPreview.style.transform = `scale(${number / 100})`;
+  scaleValue.value = `${number}%`;
 };
 
 // Эффект на изображение
@@ -292,126 +271,29 @@ Li.addEventListener(`click`, function () {
   imgUploadEffectLevel.classList.remove(`hidden`);
 });
 
-// Валидация хеш-тегов
+// Валидация хеш-тегов и комментов
+
+const isRepeated = function (elements) {
+  return Array.from(new Set(elements.map((tag) => tag.toLowerCase()))).length !== elements.length;
+};
+
+const doValidationOfHashtags = function (tags) {
+  const validationRule = /(^|\B)#(?![0-9_]+\b)([a-zA-Z0-9_]{1,20})(\b|\r)/gi;
+  return tags.every((tag) => validationRule.test(tag));
+};
 
 const hashTagsInput = document.querySelector(`.text__hashtags`);
-const pattern = /^([#]{1})([0-9a-zа-яё]{1,19})$/;
-const hashTagsMax = 5;
 
-const createHashTagsArray = function (hashTagsString) {
-  return hashTagsString.split(` `);
-};
-
-const createNewHashtagsArrayWithoutSpaces = function (allHashtags) {
-  const tags = allHashtags.filter((hashtag) => {
-    return hashtag !== ``;
-  });
-  return tags;
-};
-
-const doValidationOfHashtags = function (arrayOfHashtags) {
-  arrayOfHashtags.forEach((item, index) => {
-    const valueLength = item.length;
-    if (!item.startsWith(`#`)) {
-      hashTagsInput.setCustomValidity(`Нет 3`);
-    } else if (valueLength < HASHTAGS_LENGTH.min) {
-      hashTagsInput.setCustomValidity(`Нет 4`);
-    } else if (valueLength > HASHTAGS_LENGTH.max) {
-      hashTagsInput.setCustomValidity(`Нет 5`);
-    } else if (!item.match(pattern)) {
-      hashTagsInput.setCustomValidity(`Нет 2`);
-    } else if (arrayOfHashtags.length > hashTagsMax) {
-      hashTagsInput.setCustomValidity(`Нет 1`);
-    } else if (arrayOfHashtags.indexOf(item, index + 1) !== -1) {
-      hashTagsInput.setCustomValidity(`Нет 6`);
-    } else {
-      hashTagsInput.setCustomValidity(``);
-    }
-    hashTagsInput.reportValidity();
-  });
-};
-
-const hashTagsInputKeyupHandler = function () {
-  const inputValue = hashTagsInput.value.trim().toLowerCase();
-  const dirtyHashTags = createHashTagsArray(inputValue);
-  const cleanHashTags = createNewHashtagsArrayWithoutSpaces(dirtyHashTags);
-  doValidationOfHashtags(cleanHashTags);
-
-  if (!hashTagsInput.validity.valid) {
-    hashTagsInput.style.outline = `2px solid red`;
+const hashTagsInputKeyupHandler = function (evt) {
+  const hashTags = evt.target.value.split(` `);
+  if (hashTags.length > 5) {
+    hashTagsInput.setCustomValidity(`Максимальное количество тегов - 5`);
+  } else if (isRepeated(hashTags)) {
+    hashTagsInput.setCustomValidity(`Теги не должны повторяться`);
+  } else if (doValidationOfHashtags(hashTags)) {
+    hashTagsInput.setCustomValidity(`Теги должны соответствовать формату`);
   } else {
-    hashTagsInput.style.outline = `none`;
+    hashTagsInput.setCustomValidity(``);
   }
 };
-
-hashTagsInput.addEventListener(`keyup`, hashTagsInputKeyupHandler);
-
-hashTagsInput.addEventListener(`focusin`, function () {
-  document.removeEventListener(`keydown`, modalEscPress);
-});
-
-hashTagsInput.addEventListener(`focusout`, function () {
-  document.addEventListener(`keydown`, modalEscPress);
-});
-
-// Задание 4.13 (Личный проект: доверяй, но проверяй (часть 2))
-
-const smallPhotos = document.querySelectorAll(`.picture`);
-
-const addSmallPhotoClicker = function (smallphoto, content) {
-  smallphoto.addEventListener(`click`, function (evt) {
-    evt.preventDefault();
-    document.addEventListener(`keydown`, bigPictureEscPress);
-    showFullSizePicture(content);
-    createSocialComment(content);
-  });
-};
-
-for (let i = 0; i < smallPhotos.length; i++) {
-  addSmallPhotoClicker(smallPhotos[i], mocks[i]);
-}
-
-// Закрываем превью фото с коментами
-
-const bigPictureCancel = document.querySelector(`.big-picture__cancel`);
-
-const bigPictureEscPress = function (evt) {
-  if (evt.key === `Escape`) {
-    evt.preventDefault();
-    closeBigPicture();
-  }
-};
-
-document.addEventListener(`keydown`, bigPictureEscPress);
-
-const closeBigPicture = function () {
-  bigPicture.classList.add(`hidden`);
-  document.removeEventListener(`keydown`, bigPictureEscPress);
-};
-
-bigPictureCancel.addEventListener(`click`, function () {
-  closeBigPicture();
-});
-
-// Поле ввода комментария
-
-const commentsField = document.querySelector(`.text__description`);
-const COMMENTS_MAX = 120;
-
-commentsField.oninput = function () {
-  const valueLength = commentsField.value.length;
-  if (commentsField.value.length > COMMENTS_MAX) {
-    commentsField.setCustomValidity(`Удалите ` + (COMMENTS_MAX - valueLength) + ` симв.`);
-  } else {
-    commentsField.setCustomValidity(``);
-  }
-  commentsField.reportValidity();
-};
-
-commentsField.addEventListener(`focusin`, function () {
-  document.removeEventListener(`keydown`, modalEscPress);
-});
-
-commentsField.addEventListener(`focusout`, function () {
-  document.addEventListener(`keydown`, modalEscPress);
-});
+hashTagsInput.addEventListener(`input`, hashTagsInputKeyupHandler);

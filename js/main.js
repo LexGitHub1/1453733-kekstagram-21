@@ -143,10 +143,11 @@ showFullSizePicture(mocks[0]);
 
 const photoEdit = document.querySelector(`.img-upload__overlay`);
 const photoPrew = document.querySelector(`.img-upload__preview img`);
+const effectField = document.querySelector(`.img-upload__effect-level`);
 const uploadFile = document.querySelector(`#upload-file`);
 const uploadCloseBtn = document.querySelector(`.img-upload__cancel`);
 
-const onPhotoEditEscPress = (evt) => {
+const onPhotoEditEscPress = function (evt) {
   if (evt.key === `Escape`) {
     evt.preventDefault();
     photoEdit.classList.add(`hidden`);
@@ -154,23 +155,26 @@ const onPhotoEditEscPress = (evt) => {
   }
 };
 
-const photoEditOpen = () => {
+const photoEditOpen = function () {
   photoEdit.classList.remove(`hidden`);
   document.querySelector(`body`).classList.add(`modal-open`);
   document.addEventListener(`keydown`, onPhotoEditEscPress);
 };
 
-const photoEditClose = () => {
+const photoEditClose = function () {
+  photoPrew.className = ``;
+  photoPrew.style.transform = ``;
   photoEdit.classList.add(`hidden`);
   document.querySelector(`body`).classList.remove(`modal-open`);
   document.removeEventListener(`keydown`, onPhotoEditEscPress);
+  effectField.classList.add(`hidden`);
 };
 
-uploadCloseBtn.addEventListener(`click`, () => {
+uploadCloseBtn.addEventListener(`click`, function () {
   photoEditClose();
 });
 
-uploadFile.addEventListener(`change`, () => {
+uploadFile.addEventListener(`change`, function () {
   photoEditOpen();
 
   if (uploadFile.files && uploadFile.files[0]) {
@@ -216,36 +220,27 @@ const onEffectChange = function (evt) {
   if (evt.target.matches(`input[type="radio"]`)) {
     img.className = ``;
     img.className = `effects__preview--${evt.target.value}`;
+
+    if (evt.target.value === `none`) {
+      effectField.classList.add(`hidden`);
+    } else {
+      effectField.classList.remove(`hidden`);
+    }
   }
 };
 
 effects.addEventListener(`click`, onEffectChange);
 
-const liFirst = document.querySelector(`.effects__item:first-child`);
-const liNot = document.querySelector(`.effects__item:not(:first-child)`);
-const imgUploadEffectLevel = document.querySelector(`.img-upload__effect-level`);
-
-imgUploadEffectLevel.classList.add(`hidden`);
-
-liFirst.addEventListener(`click`, function () {
-  imgUploadEffectLevel.classList.add(`hidden`);
-});
-
-liNot.addEventListener(`click`, function () {
-  imgUploadEffectLevel.classList.remove(`hidden`);
-});
-
 // Изменение размера изображения
 
-const effectField = document.querySelector(`.img-upload__effect-level`);
 const effectLevelDepth = effectField.querySelector(`.effect-level__depth`);
 const effectPin = effectField.querySelector(`.effect-level__pin`);
 const effectPinValue = effectField.querySelector(`.effect-level__value`);
 
-effectPin.addEventListener(`mousedown`, (evt) => {
+effectPin.addEventListener(`mousedown`, function (evt) {
   const pinLineWidth = effectField.querySelector(`.effect-level__line`).offsetWidth;
   let startCoord = evt.clientX;
-  const onDocumentMouseMove = (moveEvt) => {
+  const onDocumentMouseMove = function (moveEvt) {
     const shift = startCoord - moveEvt.clientX;
     startCoord = moveEvt.clientX;
     let currentCoord = effectPin.offsetLeft - shift;
@@ -258,7 +253,7 @@ effectPin.addEventListener(`mousedown`, (evt) => {
     effectLevelDepth.style.width = `${currentCoord}px`;
     effectPinValue.value = Math.round(currentCoord * 100 / pinLineWidth);
   };
-  const onDocumentMouseUp = () => {
+  const onDocumentMouseUp = function () {
     document.removeEventListener(`mousemove`, onDocumentMouseMove);
     document.removeEventListener(`mouseup`, onDocumentMouseUp);
   };

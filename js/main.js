@@ -141,124 +141,88 @@ showFullSizePicture(mocks[0]);
 
 // Загрузка изображения и показ формы редактирования 1.2 и 1.3
 
-const uploadImageFile = document.querySelector(`#upload-file`);
-const imageUploadOverlay = document.querySelector(`.img-upload__overlay`);
-const uploadCancel = document.querySelector(`#upload-cancel`);
+const photoEdit = document.querySelector(`.img-upload__overlay`);
+const photoPrew = document.querySelector(`.img-upload__preview img`);
+const uploadFile = document.querySelector(`#upload-file`);
+const uploadCloseBtn = document.querySelector(`.img-upload__cancel`);
 
-const modalEscPress = function (evt) {
+const onPhotoEditEscPress = (evt) => {
   if (evt.key === `Escape`) {
     evt.preventDefault();
-    closeModal();
+    photoEdit.classList.add(`hidden`);
+    document.querySelector(`body`).classList.remove(`modal-open`);
   }
 };
 
-const openModal = function () {
-  imageUploadOverlay.classList.remove(`hidden`);
+const photoEditOpen = () => {
+  photoEdit.classList.remove(`hidden`);
   document.querySelector(`body`).classList.add(`modal-open`);
-  document.addEventListener(`keydown`, modalEscPress);
+  document.addEventListener(`keydown`, onPhotoEditEscPress);
 };
 
-const closeModal = function () {
-  imageUploadOverlay.classList.add(`hidden`);
+const photoEditClose = () => {
+  photoEdit.classList.add(`hidden`);
   document.querySelector(`body`).classList.remove(`modal-open`);
-  document.removeEventListener(`keydown`, modalEscPress);
-  uploadImageFile.value = ``;
+  document.removeEventListener(`keydown`, onPhotoEditEscPress);
 };
 
-uploadImageFile.addEventListener(`change`, function () {
-  openModal();
+uploadCloseBtn.addEventListener(`click`, () => {
+  photoEditClose();
 });
 
-uploadCancel.addEventListener(`click`, function () {
-  closeModal();
+uploadFile.addEventListener(`change`, () => {
+  photoEditOpen();
+
+  if (uploadFile.files && uploadFile.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      photoPrew.setAttribute(`src`, e.target.result);
+    };
+    reader.readAsDataURL(uploadFile.files[0]);
+  }
 });
 
 // Масштаб
 
-const scaleControlSmaller = document.querySelector(`.scale__control--smaller`);
-const scaleControlBigger = document.querySelector(`.scale__control--bigger`);
-const scaleValue = document.querySelector(`.scale__control--value`);
-const imageUploadPreview = document.querySelector(`.img-upload__preview img`);
+const scaleBtnMin = document.querySelector(`.scale__control--smaller`);
+const scaleBtnMax = document.querySelector(`.scale__control--bigger`);
+const scaleControlNum = document.querySelector(`.scale__control--value`);
+let scale = 100;
 
-const value = {
-  min: 25,
-  max: 100
-};
-
-const onMinusScaleClick = function () {
-  let scale = parseInt(scaleValue.value, 10);
-  if (scale <= value.max && scale > value.min) {
-    scale -= value.min;
+scaleBtnMin.addEventListener(`click`, function (evt) {
+  evt.preventDefault();
+  if (scale > 25) {
+    scale -= 25;
+    scaleControlNum.value = `${scale}%`;
+    photoPrew.style.transform = `scale(${scale / 100})`;
   }
-  imageStyleChange(scale);
-};
+});
 
-scaleControlSmaller.addEventListener(`click`, onMinusScaleClick);
-
-const onPlusScaleClick = function () {
-  let scale = parseInt(scaleValue.value, 10);
-  if (scale >= value.min && scale < value.max) {
-    scale += value.min;
+scaleBtnMax.addEventListener(`click`, function (evt) {
+  evt.preventDefault();
+  if (scale < 100) {
+    scale += 25;
+    scaleControlNum.value = `${scale}%`;
+    photoPrew.style.transform = `scale(${scale / 100})`;
   }
-  imageStyleChange(scale);
-};
-
-scaleControlBigger.addEventListener(`click`, onPlusScaleClick);
-
-const imageStyleChange = function (number) {
-  imageUploadPreview.style.transform = `scale(${number / 100})`;
-  scaleValue.value = `${number}%`;
-};
+});
 
 // Эффект на изображение
 
 const img = document.querySelector(`.img-upload__preview img`);
 const effects = document.querySelector(`.effects`);
 
-const filterChange = function (evt) {
+const onEffectChange = function (evt) {
   if (evt.target.matches(`input[type="radio"]`)) {
     img.className = ``;
     img.className = `effects__preview--${evt.target.value}`;
   }
 };
 
-effects.addEventListener(`click`, filterChange);
-
-// Интенсивность эффекта
-
-const effectLevelPin = document.querySelector(`.effect-level__pin`);
-effectLevelPin.addEventListener(`mouseup`, function () {
-});
-const effectLevelValue = document.querySelector(`.effect-level__value`);
-
-effectLevelValue.value = {
-  min: 0,
-  max: 100
-};
-
-// effectLevelValue.value // меняется по перемещению effectLevelPin;
-// img.style.filter // меняется по изменению effectLevelValue.value;
-
-effectLevelValue.addEventListener(`change`, function () {
-  if (img.className === `effects__preview--chrome`) {
-    img.style.filter = `filter: grayscale(0..1)`;
-  }
-  if (img.className === `effects__preview--sepia`) {
-    img.style.filter = `filter: sepia(0..1)`;
-  }
-  if (img.className === `effects__preview--marvin`) {
-    img.style.filter = `filter: invert(0..100%)`;
-  }
-  if (img.className === `effects__preview--phobos`) {
-    img.style.filter = `filter: blur(0..3px)`;
-  }
-  if (img.className === `effects__preview--heat`) {
-    img.style.filter = `filter: brightness(1..3)`;
-  }
-});
+effects.addEventListener(`click`, onEffectChange);
 
 const liFirst = document.querySelector(`.effects__item:first-child`);
-const Li = document.querySelector(`.effects__item:not(:first-child)`);
+const liNot = document.querySelector(`.effects__item:not(:first-child)`);
 const imgUploadEffectLevel = document.querySelector(`.img-upload__effect-level`);
 
 imgUploadEffectLevel.classList.add(`hidden`);
@@ -267,8 +231,39 @@ liFirst.addEventListener(`click`, function () {
   imgUploadEffectLevel.classList.add(`hidden`);
 });
 
-Li.addEventListener(`click`, function () {
+liNot.addEventListener(`click`, function () {
   imgUploadEffectLevel.classList.remove(`hidden`);
+});
+
+// Изменение размера изображения
+
+const effectField = document.querySelector(`.img-upload__effect-level`);
+const effectLevelDepth = effectField.querySelector(`.effect-level__depth`);
+const effectPin = effectField.querySelector(`.effect-level__pin`);
+const effectPinValue = effectField.querySelector(`.effect-level__value`);
+
+effectPin.addEventListener(`mousedown`, (evt) => {
+  const pinLineWidth = effectField.querySelector(`.effect-level__line`).offsetWidth;
+  let startCoord = evt.clientX;
+  const onDocumentMouseMove = (moveEvt) => {
+    const shift = startCoord - moveEvt.clientX;
+    startCoord = moveEvt.clientX;
+    let currentCoord = effectPin.offsetLeft - shift;
+    if (currentCoord < 0) {
+      currentCoord = 0;
+    } else if (currentCoord > pinLineWidth) {
+      currentCoord = pinLineWidth;
+    }
+    effectPin.style.left = `${currentCoord}px`;
+    effectLevelDepth.style.width = `${currentCoord}px`;
+    effectPinValue.value = Math.round(currentCoord * 100 / pinLineWidth);
+  };
+  const onDocumentMouseUp = () => {
+    document.removeEventListener(`mousemove`, onDocumentMouseMove);
+    document.removeEventListener(`mouseup`, onDocumentMouseUp);
+  };
+  document.addEventListener(`mousemove`, onDocumentMouseMove);
+  document.addEventListener(`mouseup`, onDocumentMouseUp);
 });
 
 // Валидация хеш-тегов и комментов

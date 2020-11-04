@@ -302,7 +302,7 @@ effectPin.addEventListener(`mousedown`, function (evt) {
   document.addEventListener(`mouseup`, onDocumentMouseUp);
 });
 
-// Валидация хеш-тегов и комментов
+// Валидация хеш-тегов и комментов.
 
 const isRepeated = function (elements) {
   return Array.from(new Set(elements.map((tag) => tag.toLowerCase()))).length !== elements.length;
@@ -327,5 +327,4 @@ const hashTagsInputKeyupHandler = function (evt) {
     hashTagsInput.setCustomValidity(``);
   }
 };
-
 hashTagsInput.addEventListener(`input`, hashTagsInputKeyupHandler);

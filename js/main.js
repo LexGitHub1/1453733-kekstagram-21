@@ -157,6 +157,7 @@ const onPhotoEditEscPress = function (evt) {
 
 const photoEditOpen = function () {
   photoEdit.classList.remove(`hidden`);
+  effectField.classList.add(`hidden`);
   document.querySelector(`body`).classList.add(`modal-open`);
   document.addEventListener(`keydown`, onPhotoEditEscPress);
 };

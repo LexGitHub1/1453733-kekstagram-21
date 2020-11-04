@@ -327,4 +327,5 @@ const hashTagsInputKeyupHandler = function (evt) {
     hashTagsInput.setCustomValidity(``);
   }
 };
+
 hashTagsInput.addEventListener(`input`, hashTagsInputKeyupHandler);

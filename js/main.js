@@ -134,7 +134,7 @@ const renderBigPicture = function (photo) {
 
 // Скрыть полноэкранный режим
 
-const hideBigPicture = () => {
+const hideBigPicture = function () {
   document.querySelector(`.big-picture`).classList.add(`hidden`);
 };
 

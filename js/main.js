@@ -30,10 +30,7 @@ const COMMENTS = {
   max: 10,
 };
 
-const AVATAR = {
-  width: 35,
-  height: 25,
-};
+const picturesElement = document.querySelector(`.pictures`);
 
 const getRandom = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -72,10 +69,11 @@ const getMocksArray = function (objectsAmount) {
   return resultMocks;
 };
 
-const getPhoto = function (photo) {
+const getPhoto = function (photo, id) {
   const pictureTemplate = document.querySelector(`#picture`).content.querySelector(`.picture`);
   const pictureElement = pictureTemplate.cloneNode(true);
 
+  pictureElement.dataset.id = id;
   pictureElement.querySelector(`.picture__img`).src = photo.url;
   pictureElement.querySelector(`.picture__img`).alt = photo.description;
   pictureElement.querySelector(`.picture__likes`).textContent = photo.likes;
@@ -85,57 +83,99 @@ const getPhoto = function (photo) {
 };
 
 const renderPictures = function (pictures) {
-  const picturesElement = document.querySelector(`.pictures`);
   const fragmentPhoto = document.createDocumentFragment();
 
-  pictures.forEach(function (value) {
-    fragmentPhoto.appendChild(getPhoto(value));
-  });
-  picturesElement.appendChild(fragmentPhoto);
+  for (let i = 0; i < pictures.length; i++) {
+    fragmentPhoto.appendChild(getPhoto(pictures[i], i));
+  }
+  return fragmentPhoto;
 };
 
 const mocks = getMocksArray(OBJECTS_AMOUNT);
-renderPictures(mocks);
+picturesElement.appendChild(renderPictures(mocks));
 
-const createSocialComment = function (object) {
-  const fragment = document.createDocumentFragment();
-  const socialComments = document.querySelector(`.social__comments`);
-  const socialComment = socialComments.querySelector(`li`);
-  socialComments.innerHTML = ``;
+// Полноэкранный режим
 
-  object.comments.forEach(function (value) {
-    const li = socialComment.cloneNode(true);
-    li.querySelector(`.social__picture`).src = value.avatar;
-    li.querySelector(`.social__picture`).alt = value.name;
-    li.querySelector(`.social__picture`).width = AVATAR.width;
-    li.querySelector(`.social__picture`).height = AVATAR.height;
-    li.querySelector(`.social__text`).textContent = value.message;
-    fragment.append(li);
-  });
-  socialComments.append(fragment);
+const renderBigPictureComments = function (comments, mountingPoint) {
+  for (let i = 0; i < comments.length; i++) {
+    const commentListItem = document.createElement(`li`);
+    commentListItem.classList.add(`social__comment`);
+    const commentImage = document.createElement(`img`);
+    commentImage.setAttribute(`src`, `${comments[i].avatar}`);
+    commentImage.setAttribute(`alt`, `${comments[i].name}`);
+    commentImage.setAttribute(`width`, `35`);
+    commentImage.setAttribute(`height`, `35`);
+    commentImage.classList.add(`social__picture`);
+    const commentText = document.createElement(`p`);
+    commentText.classList.add(`social__text`);
+    commentText.textContent = comments[i].message;
+    commentListItem.appendChild(commentImage);
+    commentListItem.appendChild(commentText);
+    mountingPoint.appendChild(commentListItem);
+  }
 };
 
-const bigPicture = document.querySelector(`.big-picture`);
-const showFullSizePicture = function (object) {
+const renderBigPicture = function (photo) {
+  const bigPicture = document.querySelector(`.big-picture`);
   bigPicture.classList.remove(`hidden`);
-
-  const {url, likes, comments, description} = object;
-  document.querySelector(`.big-picture__img img`).src = url;
-  document.querySelector(`.likes-count`).textContent = likes;
-  document.querySelector(`.comments-count`).textContent = comments.length;
-  document.querySelector(`.social__caption`).textContent = description;
-  createSocialComment(mocks[0]);
-
-  bigPicture.classList.add(`hidden`);
+  bigPicture.querySelector(`.big-picture__img img`).setAttribute(`src`, `${photo.url}`);
+  bigPicture.querySelector(`.likes-count`).textContent = photo.likes;
+  bigPicture.querySelector(`.comments-count`).textContent = photo.comments.length;
+  bigPicture.querySelector(`.social__caption`).textContent = photo.description;
+  bigPicture.querySelector(`.social__comments`).innerHTML = ``;
+  renderBigPictureComments(photo.comments, bigPicture.querySelector(`.social__comments`));
   const socialCommentCount = document.querySelector(`.social__comment-count`);
   socialCommentCount.classList.add(`hidden`);
-
   const commentsLoader = document.querySelector(`.comments-loader`);
   commentsLoader.classList.add(`hidden`);
-
-  document.querySelector(`body`).classList.add(`modal-open`);
+  const body = document.querySelector(`body`);
+  body.classList.add(`modal-open`);
 };
-showFullSizePicture(mocks[0]);
+
+// Скрыть полноэкранный режим
+
+const hideBigPicture = () => {
+  document.querySelector(`.big-picture`).classList.add(`hidden`);
+};
+
+const bigPictureCancel = document.querySelector(`.big-picture__cancel`);
+
+const onBigPictureCancelClick = function () {
+  hideBigPicture();
+
+  picturesElement.addEventListener(`click`, onPhotosContainerClick);
+  bigPictureCancel.removeEventListener(`click`, onBigPictureCancelClick);
+  document.removeEventListener(`keydown`, onBigPictureEscapePress);
+};
+
+const onBigPictureEscapePress = function (evt) {
+  if (evt.key === `Escape`) {
+    evt.preventDefault();
+    hideBigPicture();
+
+    picturesElement.addEventListener(`click`, onPhotosContainerClick);
+    bigPictureCancel.removeEventListener(`click`, onBigPictureCancelClick);
+    document.removeEventListener(`keydown`, onBigPictureEscapePress);
+  }
+};
+
+const openBigPicture = function (id) {
+  renderBigPicture(mocks[id]);
+
+  picturesElement.removeEventListener(`click`, onPhotosContainerClick);
+  bigPictureCancel.addEventListener(`click`, onBigPictureCancelClick);
+  document.addEventListener(`keydown`, onBigPictureEscapePress);
+};
+
+const onPhotosContainerClick = function (evt) {
+  if (evt.target.matches(`.picture__img`)) {
+    openBigPicture(evt.target.parentElement.dataset.id);
+  } else if (evt.target.matches(`.pictures a`)) {
+    openBigPicture(evt.target.dataset.id);
+  }
+};
+
+picturesElement.addEventListener(`click`, onPhotosContainerClick);
 
 //  Задание 4.12 (Личный проект: доверяй, но проверяй (часть 1))
 

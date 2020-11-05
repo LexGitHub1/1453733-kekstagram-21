@@ -147,7 +147,6 @@ const onBigPictureCancelClick = function () {
   hideBigPicture();
 };
 
-
 const onBigPictureEscapePress = function (evt) {
   if (evt.key === `Escape`) {
     evt.preventDefault();

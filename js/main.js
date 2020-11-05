@@ -172,7 +172,7 @@ const onPhotosContainerClick = function (evt) {
 
 picturesElement.addEventListener(`click`, onPhotosContainerClick);
 
-//  Задание 4.12 (Личный проект: доверяй, но проверяй (часть 1))
+// Задание 4.12 (Личный проект: доверяй, но проверяй (часть 1))
 
 // Загрузка изображения и показ формы редактирования 1.2 и 1.3
 

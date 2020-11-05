@@ -136,26 +136,21 @@ const renderBigPicture = function (photo) {
 
 const hideBigPicture = function () {
   document.querySelector(`.big-picture`).classList.add(`hidden`);
+  picturesElement.addEventListener(`click`, onPhotosContainerClick);
+  bigPictureCancel.removeEventListener(`click`, onBigPictureCancelClick);
+  document.removeEventListener(`keydown`, onBigPictureEscapePress);
 };
 
 const bigPictureCancel = document.querySelector(`.big-picture__cancel`);
 
 const onBigPictureCancelClick = function () {
   hideBigPicture();
-
-  picturesElement.addEventListener(`click`, onPhotosContainerClick);
-  bigPictureCancel.removeEventListener(`click`, onBigPictureCancelClick);
-  document.removeEventListener(`keydown`, onBigPictureEscapePress);
 };
 
 const onBigPictureEscapePress = function (evt) {
   if (evt.key === `Escape`) {
     evt.preventDefault();
     hideBigPicture();
-
-    picturesElement.addEventListener(`click`, onPhotosContainerClick);
-    bigPictureCancel.removeEventListener(`click`, onBigPictureCancelClick);
-    document.removeEventListener(`keydown`, onBigPictureEscapePress);
   }
 };
 
@@ -302,7 +297,7 @@ effectPin.addEventListener(`mousedown`, function (evt) {
   document.addEventListener(`mouseup`, onDocumentMouseUp);
 });
 
-// Валидация хеш-тегов и комментов.
+// Валидация хеш-тегов и комментов
 
 const isRepeated = function (elements) {
   return Array.from(new Set(elements.map((tag) => tag.toLowerCase()))).length !== elements.length;

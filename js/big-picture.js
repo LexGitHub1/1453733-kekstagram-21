@@ -76,4 +76,10 @@
   };
 
   picturesElement.addEventListener(`click`, onPhotosContainerClick);
+
+  window.bigpicture = {
+    renderBigPicture,
+    onBigPictureEscapePress,
+    picturesElement
+  };
 })();

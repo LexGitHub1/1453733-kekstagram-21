@@ -14,14 +14,17 @@
     return pictureElement;
   };
 
-  const renderPictures = function (pictures) {
+  const renderPictures = function () {
+    const pictures = document.querySelector(`.pictures`);
     const fragmentPhoto = document.createDocumentFragment();
 
-    for (let i = 0; i < pictures.length; i++) {
-      fragmentPhoto.appendChild(getPhoto(pictures[i], i));
-    }
+    window.mockscreation.mocks.forEach(function (value) {
+      fragmentPhoto.appendChild(getPhoto(value));
+    });
+    pictures.appendChild(fragmentPhoto);
+
     return fragmentPhoto;
   };
 
-  renderPictures();
+  renderPictures(window.mockscreation.mocks);
 })();

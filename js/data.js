@@ -29,6 +29,8 @@
     max: 10,
   };
 
+  const OBJECTS_AMOUNT = 25;
+
   const getRandom = function (min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
@@ -66,5 +68,11 @@
     return resultMocks;
   };
 
-  getMocksArray();
+  (function () {
+    const mocks = getMocksArray(OBJECTS_AMOUNT);
+
+    window.mockscreation = {
+      mocks
+    };
+  })();
 })();

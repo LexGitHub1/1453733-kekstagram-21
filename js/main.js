@@ -134,28 +134,24 @@ const renderBigPicture = function (photo) {
 
 // Скрыть полноэкранный режим
 
-const hideBigPicture = () => {
+const hideBigPicture = function () {
   document.querySelector(`.big-picture`).classList.add(`hidden`);
+  picturesElement.addEventListener(`click`, onPhotosContainerClick);
+  bigPictureCancel.removeEventListener(`click`, onBigPictureCancelClick);
+  document.removeEventListener(`keydown`, onBigPictureEscapePress);
 };
 
 const bigPictureCancel = document.querySelector(`.big-picture__cancel`);
 
 const onBigPictureCancelClick = function () {
   hideBigPicture();
-
-  picturesElement.addEventListener(`click`, onPhotosContainerClick);
-  bigPictureCancel.removeEventListener(`click`, onBigPictureCancelClick);
-  document.removeEventListener(`keydown`, onBigPictureEscapePress);
 };
+
 
 const onBigPictureEscapePress = function (evt) {
   if (evt.key === `Escape`) {
     evt.preventDefault();
     hideBigPicture();
-
-    picturesElement.addEventListener(`click`, onPhotosContainerClick);
-    bigPictureCancel.removeEventListener(`click`, onBigPictureCancelClick);
-    document.removeEventListener(`keydown`, onBigPictureEscapePress);
   }
 };
 
@@ -176,8 +172,6 @@ const onPhotosContainerClick = function (evt) {
 };
 
 picturesElement.addEventListener(`click`, onPhotosContainerClick);
-
-//  Задание 4.12 (Личный проект: доверяй, но проверяй (часть 1))
 
 // Загрузка изображения и показ формы редактирования 1.2 и 1.3
 

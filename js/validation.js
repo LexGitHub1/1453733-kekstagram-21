@@ -55,12 +55,8 @@
     document.addEventListener(`keydown`, window.modalopenclose.modalEscPress);
   });
 
-  (function () {
-    window.validation = {
-      hashTagsInput
-    };
-    window.validation = {
-      commentsField
-    };
-  })();
+  window.validation = {
+    hashTagsInput,
+    commentsField
+  };
 })();

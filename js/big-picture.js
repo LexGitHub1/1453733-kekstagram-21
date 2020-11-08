@@ -77,7 +77,7 @@
 
   picturesElement.addEventListener(`click`, onPhotosContainerClick);
 
-  window.bigpicture = {
+  window.bigImgShow = {
     renderBigPicture,
     onBigPictureEscapePress,
     picturesElement

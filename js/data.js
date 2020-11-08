@@ -68,11 +68,10 @@
     return resultMocks;
   };
 
-  (function () {
-    const mocks = getMocksArray(OBJECTS_AMOUNT);
 
-    window.mockscreation = {
-      mocks
-    };
-  })();
+  const mocks = getMocksArray(OBJECTS_AMOUNT);
+
+  window.mockscreation = {
+    mocks
+  };
 })();

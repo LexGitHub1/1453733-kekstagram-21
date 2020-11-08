@@ -99,8 +99,18 @@
     effectField.classList.add(`hidden`);
   });
 
+  const slider = {};
+  slider.initSlider = function (callback) {
+    effectPin.addEventListener(`mousedown`, function (evt) {
+      if (typeof callback === `function`) {
+        setNewEffectDepth(evt, callback);
+      }
+    });
+  };
+
   window.effects = {
     setDefaultDepth,
-    effectLevel
+    effectLevel,
+    slider
   };
 })();

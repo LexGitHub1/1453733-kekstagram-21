@@ -47,7 +47,7 @@
     }
   });
 
-  window.modalopenclose = {
+  window.modalOpenClose = {
     onPhotoEditEscPress,
     uploadFile,
     photoEdit

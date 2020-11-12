@@ -58,11 +58,11 @@
   hashTagsInput.addEventListener(`input`, hashTagsInputKeyupHandler);
 
   hashTagsInput.addEventListener(`focusin`, function () {
-    document.removeEventListener(`keydown`, window.modalopenclose.onPhotoEditEscPress);
+    document.removeEventListener(`keydown`, window.modalOpenClose.onPhotoEditEscPress);
   });
 
   hashTagsInput.addEventListener(`focusout`, function () {
-    document.addEventListener(`keydown`, window.modalopenclose.onPhotoEditEscPress);
+    document.addEventListener(`keydown`, window.modalOpenClose.onPhotoEditEscPress);
   });
 
   commentsField.oninput = function () {
@@ -76,10 +76,10 @@
   };
 
   commentsField.addEventListener(`focusin`, function () {
-    document.removeEventListener(`keydown`, window.modalopenclose.onPhotoEditEscPress);
+    document.removeEventListener(`keydown`, window.modalOpenClose.onPhotoEditEscPress);
   });
 
   commentsField.addEventListener(`focusout`, function () {
-    document.addEventListener(`keydown`, window.modalopenclose.onPhotoEditEscPress);
+    document.addEventListener(`keydown`, window.modalOpenClose.onPhotoEditEscPress);
   });
 })();

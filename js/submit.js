@@ -7,10 +7,10 @@
 
   const resetImageData = function () {
     window.effects.setDefaultDepth();
-    window.modalopenclose.uploadImageFile.value = ``;
-    window.scale.imageUploadPreview.style.filter = ``;
-    window.scale.imageUploadPreview.style.transform = `scale(1.00)`;
-    window.scale.imageUploadPreview.className = `effects__preview--none`;
+    window.modalopenclose.uploadFile.value = ``;
+    window.scale.photoPrew.style.filter = ``;
+    window.scale.photoPrew.style.transform = `scale(1.00)`;
+    window.scale.photoPrew.className = `effects__preview--none`;
     window.effects.effectLevel.classList.add(`hidden`);
   };
 

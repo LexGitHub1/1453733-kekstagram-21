@@ -46,4 +46,10 @@
       reader.readAsDataURL(uploadFile.files[0]);
     }
   });
+
+  window.modalopenclose = {
+    onPhotoEditEscPress,
+    uploadFile,
+    photoEdit
+  };
 })();

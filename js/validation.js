@@ -2,6 +2,8 @@
 
 (function () {
   const COMMENTS_MAX = 120;
+  const hashTagsInput = document.querySelector(`.text__hashtags`);
+  const commentsField = document.querySelector(`.text__description`);
 
   const isRepeated = function (elements) {
     return Array.from(new Set(elements.map((tag) => tag.toLowerCase()))).length !== elements.length;
@@ -11,8 +13,6 @@
     const validationRule = /(^|\B)#(?![0-9_]+\b)([a-zA-Z0-9_]{1,20})(\b|\r)/gi;
     return tags.every((tag) => validationRule.test(tag));
   };
-
-  const hashTagsInput = document.querySelector(`.text__hashtags`);
 
   const hashTagsInputKeyupHandler = function (evt) {
     const hashTags = evt.target.value.split(` `);
@@ -26,17 +26,17 @@
       hashTagsInput.setCustomValidity(``);
     }
   };
+
   hashTagsInput.addEventListener(`input`, hashTagsInputKeyupHandler);
 
   hashTagsInput.addEventListener(`focusin`, function () {
-    document.removeEventListener(`keydown`, window.modalopenclose.modalEscPress);
+    document.removeEventListener(`keydown`, window.modalopenclose.onPhotoEditEscPress);
   });
 
   hashTagsInput.addEventListener(`focusout`, function () {
-    document.addEventListener(`keydown`, window.modalopenclose.modalEscPress);
+    document.addEventListener(`keydown`, window.modalopenclose.onPhotoEditEscPress);
   });
 
-  const commentsField = document.querySelector(`.text__description`);
   commentsField.oninput = function () {
     const valueLength = commentsField.value.length;
     if (commentsField.value.length > COMMENTS_MAX) {
@@ -48,15 +48,10 @@
   };
 
   commentsField.addEventListener(`focusin`, function () {
-    document.removeEventListener(`keydown`, window.modalopenclose.modalEscPress);
+    document.removeEventListener(`keydown`, window.modalopenclose.onPhotoEditEscPress);
   });
 
   commentsField.addEventListener(`focusout`, function () {
-    document.addEventListener(`keydown`, window.modalopenclose.modalEscPress);
+    document.addEventListener(`keydown`, window.modalopenclose.onPhotoEditEscPress);
   });
-
-  window.validation = {
-    hashTagsInput,
-    commentsField
-  };
 })();

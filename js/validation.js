@@ -1,29 +1,57 @@
 'use strict';
 
 (function () {
+  const HASHTAGS_MAX_COUNT = 5;
   const COMMENTS_MAX = 120;
+  const HASHTAG_REG_EXP = /^#([а-яА-Я]|[a-zA-Z]|[0-9]){1,20}$/;
+
+  const USER_MESSAGE = {
+    LESS_THEN_FIVE: `Нельзя указать больше пяти хэш-тегов`,
+    NO_DUPLICATES: `Один и тот же хэш-тег не может быть использован дважды`,
+    CORRECT: `Не верный формат хештега`,
+  };
+
   const hashTagsInput = document.querySelector(`.text__hashtags`);
   const commentsField = document.querySelector(`.text__description`);
 
-  const isRepeated = function (elements) {
-    return Array.from(new Set(elements.map((tag) => tag.toLowerCase()))).length !== elements.length;
-  };
+  const hashTagsInputKeyupHandler = function () {
+    const hashtagsArr = hashTagsInput.value.replace(/ +/g, ` `).trim().toLowerCase().split(` `);
 
-  const doValidationOfHashtags = function (tags) {
-    const validationRule = /(^|\B)#(?![0-9_]+\b)([a-zA-Z0-9_]{1,20})(\b|\r)/gi;
-    return tags.every((tag) => validationRule.test(tag));
-  };
+    const isHashtagsLessThanFive = hashtagsArr.length <= HASHTAGS_MAX_COUNT;
 
-  const hashTagsInputKeyupHandler = function (evt) {
-    const hashTags = evt.target.value.split(` `);
-    if (hashTags.length > 5) {
-      hashTagsInput.setCustomValidity(`Максимальное количество тегов - 5`);
-    } else if (isRepeated(hashTags)) {
-      hashTagsInput.setCustomValidity(`Теги не должны повторяться`);
-    } else if (doValidationOfHashtags(hashTags)) {
-      hashTagsInput.setCustomValidity(`Теги должны соответствовать формату`);
-    } else {
+    const isHashtagCorrect = hashtagsArr.every(function (tag) {
+      return HASHTAG_REG_EXP.test(tag);
+    });
+
+    const isHastagsNoDuplicates = hashtagsArr.every(function (item, index, array) {
+      return array.indexOf(item) === index;
+    });
+
+    hashTagsInput.setCustomValidity(``);
+
+    if (!isHashtagsLessThanFive) {
+      hashTagsInput.setCustomValidity(USER_MESSAGE.LESS_THEN_FIVE);
+    }
+
+    if (!isHashtagCorrect) {
+      hashTagsInput.setCustomValidity(USER_MESSAGE.CORRECT);
+    }
+
+    if (!isHastagsNoDuplicates) {
+      hashTagsInput.setCustomValidity(USER_MESSAGE.NO_DUPLICATES);
+    }
+    hashTagsInput.reportValidity();
+
+    if (hashTagsInput.value === ``) {
       hashTagsInput.setCustomValidity(``);
+    }
+
+    if ((isHashtagCorrect && isHastagsNoDuplicates && isHashtagsLessThanFive) || hashTagsInput.value === ``) {
+      hashTagsInput.style.outline = ``;
+      hashTagsInput.style.background = ``;
+    } else {
+      hashTagsInput.style.outline = `2px solid red`;
+      hashTagsInput.style.background = `pink`;
     }
   };
 

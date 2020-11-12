@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-
   const main = document.querySelector(`main`);
   const errorUpload = document.querySelector(`#error`)
   .content

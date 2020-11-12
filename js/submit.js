@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-
   const form = document.querySelector(`.img-upload__form`);
   const imageUploadOverlay = document.querySelector(`.img-upload__overlay`);
 

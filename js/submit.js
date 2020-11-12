@@ -7,7 +7,7 @@
 
   const resetImageData = function () {
     window.effects.setDefaultDepth();
-    window.modalopenclose.uploadFile.value = ``;
+    window.modalOpenClose.uploadFile.value = ``;
     window.scale.photoPrew.style.filter = ``;
     window.scale.photoPrew.style.transform = `scale(1.00)`;
     window.scale.photoPrew.className = `effects__preview--none`;

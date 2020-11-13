@@ -1,6 +1,7 @@
 'use strict';
 
 const URL_LOAD = `https://21.javascript.pages.academy/kekstagram/data`;
+
 const URL_UPLOAD = `https://21.javascript.pages.academy/kekstagram/`;
 
 const TIMEOUT_IN_MS = 10000;

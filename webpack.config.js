@@ -10,6 +10,7 @@ module.exports = {
     "./js/validation.js",
     "./js/submit.js",
     "./js/form.js",
+    "./js/photo-loading.js",
     "./js/success.js",
     "./js/error.js",
     "./js/effects-img.js",

@@ -2,13 +2,13 @@
 
 const pictures = document.querySelector(`.pictures`);
 const filters = document.querySelector(`.img-filters`);
-const openBigPicturePopup = window.bigImgShow.openBigPicture;
+const openBigPicturePopup = window.hugeImg.openBigPicture;
 
 const template = document.querySelector(`#picture`)
   .content
   .querySelector(`.picture`);
 
-const createCardElement = function (object) {
+const createCardElement = (object) => {
   const {likes, comments, url} = object;
   const cardElement = template.cloneNode(true);
   cardElement.querySelector(`.picture__likes`).textContent = likes;
@@ -17,16 +17,16 @@ const createCardElement = function (object) {
   return cardElement;
 };
 
-const renderPictures = function (cardsArray) {
+const renderPictures = (cardsArray) => {
   const fragment = document.createDocumentFragment();
-  cardsArray.forEach(function (cardObject) {
+  cardsArray.forEach((cardObject) => {
     fragment.appendChild(createCardElement(cardObject));
   });
   pictures.appendChild(fragment);
   return fragment;
 };
 
-const errorHandler = function (errorMessage) {
+const errorHandler = (errorMessage) => {
   const node = document.createElement(`div`);
   node.style = `z-index: 100; margin: 0 auto; text-align: center; background-color: red;`;
   node.style.position = `absolute`;
@@ -37,17 +37,17 @@ const errorHandler = function (errorMessage) {
   document.body.insertAdjacentElement(`afterbegin`, node);
 };
 
-const clickSmallPhoto = function (data) {
+const clickSmallPhoto = (data) => {
   const smallPhotosList = document.querySelectorAll(`.picture`);
-  smallPhotosList.forEach(function (picture, index) {
-    picture.addEventListener(`click`, function (evt) {
+  smallPhotosList.forEach((picture, index) => {
+    picture.addEventListener(`click`, (evt) => {
       evt.preventDefault();
       openBigPicturePopup(data[index]);
     });
   });
 };
 
-const successDataLoadHandler = function (data) {
+const successDataLoadHandler = (data) => {
   window.cardCreate.cardsList = [];
   window.cardCreate.cardsList = data;
   renderPictures(data);

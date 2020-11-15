@@ -19,7 +19,7 @@ const maxEffectsValues = {
   heat: [1, 2],
 };
 
-const onEffectChange = function (evt) {
+const onEffectChange = (evt) => {
   if (evt.target.matches(`input[type="radio"]`)) {
     window.scale.photoPrew.className = ``;
     setDefaultDepth();
@@ -29,14 +29,14 @@ const onEffectChange = function (evt) {
 
 effects.addEventListener(`click`, onEffectChange);
 
-const setDefaultDepth = function () {
+const setDefaultDepth = () => {
   effectPin.style.left = DEFAULT_EFFECT_LEVEL + `%`;
   effectLevelDepth.style.width = DEFAULT_EFFECT_LEVEL + `%`;
   effectPinValue.value = DEFAULT_EFFECT_LEVEL;
   window.scale.photoPrew.style.filter = ``;
 };
 
-const setNewEffectDepth = function (levelValue) {
+const setNewEffectDepth = (levelValue) => {
   const value = levelValue / 100;
 
   if (window.scale.photoPrew.className.match(`effects__preview--`)) {
@@ -62,10 +62,10 @@ const setNewEffectDepth = function (levelValue) {
   }
 };
 
-effectPin.addEventListener(`mousedown`, function (evt) {
+effectPin.addEventListener(`mousedown`, (evt) => {
   const pinLineWidth = effectField.querySelector(`.effect-level__line`).offsetWidth;
   let startCoord = evt.clientX;
-  const onDocumentMouseMove = function (moveEvt) {
+  const onDocumentMouseMoveHandler = (moveEvt) => {
     const shift = startCoord - moveEvt.clientX;
     startCoord = moveEvt.clientX;
     let currentCoord = effectPin.offsetLeft - shift;
@@ -79,34 +79,34 @@ effectPin.addEventListener(`mousedown`, function (evt) {
     effectPinValue.value = Math.round(currentCoord * 100 / pinLineWidth);
     setNewEffectDepth(effectPinValue.value);
   };
-  const onDocumentMouseUp = function () {
-    document.removeEventListener(`mousemove`, onDocumentMouseMove);
-    document.removeEventListener(`mouseup`, onDocumentMouseUp);
+  const onDocumentMouseUpHandler = () => {
+    document.removeEventListener(`mousemove`, onDocumentMouseMoveHandler);
+    document.removeEventListener(`mouseup`, onDocumentMouseUpHandler);
   };
-  document.addEventListener(`mousemove`, onDocumentMouseMove);
-  document.addEventListener(`mouseup`, onDocumentMouseUp);
+  document.addEventListener(`mousemove`, onDocumentMouseMoveHandler);
+  document.addEventListener(`mouseup`, onDocumentMouseUpHandler);
 });
 
-effectsItem.forEach(function (item) {
-  item.addEventListener(`click`, function () {
+effectsItem.forEach((item) => {
+  item.addEventListener(`click`, () => {
     effectField.classList.remove(`hidden`);
   });
 });
 
-effectsItemFirst.addEventListener(`click`, function () {
+effectsItemFirst.addEventListener(`click`, () => {
   effectField.classList.add(`hidden`);
 });
 
 const slider = {};
-slider.initSlider = function (callback) {
-  effectPin.addEventListener(`mousedown`, function (evt) {
+slider.initSlider = (callback) => {
+  effectPin.addEventListener(`mousedown`, (evt) => {
     if (typeof callback === `function`) {
       setNewEffectDepth(evt, callback);
     }
   });
 };
 
-window.effects = {
+window.specialView = {
   setDefaultDepth,
   effectLevel,
   slider

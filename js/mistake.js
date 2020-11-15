@@ -9,40 +9,40 @@ const errorElement = errorUpload.cloneNode(true);
 const errorButton = errorElement.querySelector(`.error__button`);
 const errorInner = errorElement.querySelector(`.error__inner`);
 
-const createErrorModule = function () {
+const createErrorModule = () => {
   main.insertAdjacentElement(`beforeend`, errorElement);
   errorButton.addEventListener(`click`, errorButtonClickHandler);
   document.addEventListener(`click`, errorWindowClickHandler);
   document.addEventListener(`keydown`, errorEscPressHandler);
 };
 
-const deleteErrorModule = function () {
+const deleteErrorModule = () => {
   main.removeChild(errorElement);
   errorButton.removeEventListener(`click`, errorButtonClickHandler);
   document.removeEventListener(`click`, errorWindowClickHandler);
   document.removeEventListener(`keydown`, errorEscPressHandler);
 };
 
-const errorButtonClickHandler = function () {
+const errorButtonClickHandler = () => {
   deleteErrorModule();
 };
 
-const errorWindowClickHandler = function (evt) {
+const errorWindowClickHandler = (evt) => {
   if (evt.target !== errorInner) {
     deleteErrorModule();
   }
 };
 
-const errorEscPressHandler = function (evt) {
+const errorEscPressHandler = (evt) => {
   if (evt.key === `Escape`) {
     deleteErrorModule();
   }
 };
 
-const errorUploadHandler = function () {
+const errorUploadHandler = () => {
   createErrorModule();
 };
 
-window.error = {
+window.mistake = {
   errorUploadHandler
 };

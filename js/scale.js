@@ -1,29 +1,57 @@
 'use strict';
 
+const Value = {
+  MIN: 25,
+  MAX: 100
+};
+
 const photoPrew = document.querySelector(`.img-upload__preview img`);
 const scaleBtnMin = document.querySelector(`.scale__control--smaller`);
 const scaleBtnMax = document.querySelector(`.scale__control--bigger`);
-const scaleControlNum = document.querySelector(`.scale__control--value`);
-let scale = 100;
+const counterValue = document.querySelector(`.scale__control--value`);
 
-scaleBtnMin.addEventListener(`click`, function (evt) {
-  evt.preventDefault();
-  if (scale > 25) {
-    scale -= 25;
-    scaleControlNum.value = `${scale}%`;
-    photoPrew.style.transform = `scale(${scale / 100})`;
+const clickOnMinusScaleHandler = () => {
+  let scale = parseInt(counterValue.value, 10);
+  if (scale <= Value.MAX && scale > Value.MIN) {
+    scale -= Value.MIN;
   }
-});
+  changeImageStyle(scale);
+};
 
-scaleBtnMax.addEventListener(`click`, function (evt) {
-  evt.preventDefault();
-  if (scale < 100) {
-    scale += 25;
-    scaleControlNum.value = `${scale}%`;
-    photoPrew.style.transform = `scale(${scale / 100})`;
+scaleBtnMin.addEventListener(`click`, clickOnMinusScaleHandler);
+
+const clickOnPlusScaleHandler = () => {
+  let scale = parseInt(counterValue.value, 10);
+  if (scale >= Value.MIN && scale < Value.MAX) {
+    scale += Value.MIN;
   }
-});
+  changeImageStyle(scale);
+};
+
+scaleBtnMax.addEventListener(`click`, clickOnPlusScaleHandler);
+
+const changeImageStyle = (number) => {
+  switch (number) {
+    case 25:
+      photoPrew.style.transform = `scale(0.25)`;
+      counterValue.value = `${number}%`;
+      break;
+    case 50:
+      photoPrew.style.transform = `scale(0.50)`;
+      counterValue.value = `${number}%`;
+      break;
+    case 75:
+      photoPrew.style.transform = `scale(0.75)`;
+      counterValue.value = `${number}%`;
+      break;
+    case 100:
+      photoPrew.style.transform = `scale(1.00)`;
+      counterValue.value = `${number}%`;
+      break;
+  }
+};
 
 window.scale = {
-  photoPrew
+  photoPrew,
+  counterValue
 };

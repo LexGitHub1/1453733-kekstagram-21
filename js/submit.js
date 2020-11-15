@@ -3,26 +3,26 @@
 const form = document.querySelector(`.img-upload__form`);
 const imageUploadOverlay = document.querySelector(`.img-upload__overlay`);
 
-const resetImageData = function () {
-  window.effects.setDefaultDepth();
+const resetImageData = () => {
+  window.specialView.setDefaultDepth();
   window.modalOpenClose.uploadFile.value = ``;
   window.scale.photoPrew.style.filter = ``;
   window.scale.photoPrew.style.transform = `scale(1.00)`;
   window.scale.photoPrew.className = `effects__preview--none`;
-  window.effects.effectLevel.classList.add(`hidden`);
+  window.specialView.effectLevel.classList.add(`hidden`);
 };
 
-const submitHandler = function (evt) {
+const submitHandler = (evt) => {
   window.server.upload(
       new FormData(form),
-      function () {
+      () => {
         form.reset();
         resetImageData();
         imageUploadOverlay.classList.add(`hidden`);
-        window.success.successUploadHandler();
+        window.luck.successUploadHandler();
       },
-      function () {
-        window.error.errorUploadHandler();
+      () => {
+        window.mistake.errorUploadHandler();
       });
   evt.preventDefault();
 };

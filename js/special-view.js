@@ -19,7 +19,7 @@ const maxEffectsValues = {
   heat: [1, 2],
 };
 
-const onEffectChange = (evt) => {
+const effectChangeHandler = (evt) => {
   if (evt.target.matches(`input[type="radio"]`)) {
     window.scale.photoPrew.className = ``;
     setDefaultDepth();
@@ -27,7 +27,7 @@ const onEffectChange = (evt) => {
   }
 };
 
-effects.addEventListener(`click`, onEffectChange);
+effects.addEventListener(`click`, effectChangeHandler);
 
 const setDefaultDepth = () => {
   effectPin.style.left = DEFAULT_EFFECT_LEVEL + `%`;
@@ -65,7 +65,7 @@ const setNewEffectDepth = (levelValue) => {
 effectPin.addEventListener(`mousedown`, (evt) => {
   const pinLineWidth = effectField.querySelector(`.effect-level__line`).offsetWidth;
   let startCoord = evt.clientX;
-  const onDocumentMouseMoveHandler = (moveEvt) => {
+  const documentMouseMoveHandler = (moveEvt) => {
     const shift = startCoord - moveEvt.clientX;
     startCoord = moveEvt.clientX;
     let currentCoord = effectPin.offsetLeft - shift;
@@ -79,12 +79,12 @@ effectPin.addEventListener(`mousedown`, (evt) => {
     effectPinValue.value = Math.round(currentCoord * 100 / pinLineWidth);
     setNewEffectDepth(effectPinValue.value);
   };
-  const onDocumentMouseUpHandler = () => {
-    document.removeEventListener(`mousemove`, onDocumentMouseMoveHandler);
-    document.removeEventListener(`mouseup`, onDocumentMouseUpHandler);
+  const documentMouseUpHandler = () => {
+    document.removeEventListener(`mousemove`, documentMouseMoveHandler);
+    document.removeEventListener(`mouseup`, documentMouseUpHandler);
   };
-  document.addEventListener(`mousemove`, onDocumentMouseMoveHandler);
-  document.addEventListener(`mouseup`, onDocumentMouseUpHandler);
+  document.addEventListener(`mousemove`, documentMouseMoveHandler);
+  document.addEventListener(`mouseup`, documentMouseUpHandler);
 });
 
 effectsItem.forEach((item) => {

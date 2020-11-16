@@ -8,21 +8,21 @@ const StatusCode = {
   OK: 200
 };
 
-const getServer = (xhr, onSuccess, onError) => {
+const getServer = (xhr, successHandler, errorHandler) => {
   xhr.responseType = `json`;
 
   xhr.addEventListener(`load`, () => {
     if (xhr.status === StatusCode.OK) {
-      onSuccess(xhr.response);
+      successHandler(xhr.response);
     } else {
-      onError(`Статус ответа: ${xhr.status} ${xhr.statusText}`);
+      errorHandler(`Статус ответа: ${xhr.status} ${xhr.statusText}`);
     }
   });
   xhr.addEventListener(`error`, () => {
-    onError(`Произошла ошибка соединения`);
+    errorHandler(`Произошла ошибка соединения`);
   });
   xhr.addEventListener(`timeout`, () => {
-    onError(`Запрос не успел выполниться за ${xhr.timeout} мс`);
+    errorHandler(`Запрос не успел выполниться за ${xhr.timeout} мс`);
   });
 
   xhr.timeout = TIMEOUT_IN_MS;

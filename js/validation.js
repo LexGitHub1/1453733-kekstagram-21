@@ -57,11 +57,11 @@ const hashTagsInputKeyupHandler = () => {
 hashTagsInput.addEventListener(`input`, hashTagsInputKeyupHandler);
 
 hashTagsInput.addEventListener(`focusin`, () => {
-  document.removeEventListener(`keydown`, window.modalOpenClose.onPhotoEditEscHandler);
+  document.removeEventListener(`keydown`, window.modalOpenClose.photoEditEscHandler);
 });
 
 hashTagsInput.addEventListener(`focusout`, () => {
-  document.addEventListener(`keydown`, window.modalOpenClose.onPhotoEditEscHandler);
+  document.addEventListener(`keydown`, window.modalOpenClose.photoEditEscHandler);
 });
 
 commentsField.oninput = () => {
@@ -75,11 +75,11 @@ commentsField.oninput = () => {
 };
 
 commentsField.addEventListener(`focusin`, () => {
-  document.removeEventListener(`keydown`, window.modalOpenClose.onPhotoEditEscHandler);
+  document.removeEventListener(`keydown`, window.modalOpenClose.photoEditEscHandler);
 });
 
 commentsField.addEventListener(`focusout`, () => {
-  document.addEventListener(`keydown`, window.modalOpenClose.onPhotoEditEscHandler);
+  document.addEventListener(`keydown`, window.modalOpenClose.photoEditEscHandler);
 });
 
 window.validation = {

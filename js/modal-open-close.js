@@ -7,7 +7,7 @@ const uploadFile = document.querySelector(`#upload-file`);
 const uploadCloseBtn = document.querySelector(`.img-upload__cancel`);
 const {hashTagsInput, commentsField} = window.validation;
 
-const onPhotoEditEscPress = (evt) => {
+const photoEditEscPressHandler = (evt) => {
   if (evt.key === `Escape`) {
     evt.preventDefault();
     photoEditClose();
@@ -18,7 +18,7 @@ const photoEditOpen = () => {
   photoEdit.classList.remove(`hidden`);
   effectField.classList.add(`hidden`);
   document.querySelector(`body`).classList.add(`modal-open`);
-  document.addEventListener(`keydown`, onPhotoEditEscPress);
+  document.addEventListener(`keydown`, photoEditEscPressHandler);
 };
 
 const photoEditClose = () => {
@@ -29,7 +29,7 @@ const photoEditClose = () => {
   photoPrew.style.transform = ``;
   photoEdit.classList.add(`hidden`);
   document.querySelector(`body`).classList.remove(`modal-open`);
-  document.removeEventListener(`keydown`, onPhotoEditEscPress);
+  document.removeEventListener(`keydown`, photoEditEscPressHandler);
   effectField.classList.add(`hidden`);
 };
 
@@ -50,7 +50,7 @@ uploadFile.addEventListener(`change`, () => {
 });
 
 window.modalOpenClose = {
-  onPhotoEditEscPress,
+  photoEditEscPressHandler,
   uploadFile,
   photoEdit
 };

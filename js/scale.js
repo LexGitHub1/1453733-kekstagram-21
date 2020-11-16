@@ -10,7 +10,7 @@ const scaleBtnMin = document.querySelector(`.scale__control--smaller`);
 const scaleBtnMax = document.querySelector(`.scale__control--bigger`);
 const counterValue = document.querySelector(`.scale__control--value`);
 
-const clickOnMinusScaleHandler = () => {
+const clickMinusScaleHandler = () => {
   let scale = parseInt(counterValue.value, 10);
   if (scale <= Value.MAX && scale > Value.MIN) {
     scale -= Value.MIN;
@@ -18,9 +18,9 @@ const clickOnMinusScaleHandler = () => {
   changeImageStyle(scale);
 };
 
-scaleBtnMin.addEventListener(`click`, clickOnMinusScaleHandler);
+scaleBtnMin.addEventListener(`click`, clickMinusScaleHandler);
 
-const clickOnPlusScaleHandler = () => {
+const clickPlusScaleHandler = () => {
   let scale = parseInt(counterValue.value, 10);
   if (scale >= Value.MIN && scale < Value.MAX) {
     scale += Value.MIN;
@@ -28,7 +28,7 @@ const clickOnPlusScaleHandler = () => {
   changeImageStyle(scale);
 };
 
-scaleBtnMax.addEventListener(`click`, clickOnPlusScaleHandler);
+scaleBtnMax.addEventListener(`click`, clickPlusScaleHandler);
 
 const changeImageStyle = (number) => {
   switch (number) {

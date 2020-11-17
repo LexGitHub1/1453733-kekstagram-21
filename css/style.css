@@ -1112,6 +1112,7 @@ main {
 .page-footer {
   margin-top: 30px;
   padding-top: 30px;
+  padding-bottom: 20px;
   border-top: solid 1px #cccccc;
 }
 
@@ -1140,15 +1141,6 @@ main {
 
 .copyright__link--image:hover,
 .copyright__link--image:focus {
-  opacity: 0.6;
-}
-
-.copyright__link--text {
-  color: #ffffff;
-}
-
-.copyright__link--text:hover,
-.copyright__link--text:focus {
   opacity: 0.6;
 }
 

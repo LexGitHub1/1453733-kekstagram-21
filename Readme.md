@@ -1,3 +1,3 @@
-# Проект «Кекстаграм» [![Build status][travis-image]][travis-url]
+# Личный проект «Кекстаграм»
 
-* Разработка: [Александр Панков](https://htmlacademy.ru/profile/id1453733).
+* Разработка: [Александр Панков](https://htmlacademy.ru/profile/id1453733)
